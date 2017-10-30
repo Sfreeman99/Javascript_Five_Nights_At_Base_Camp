@@ -2,6 +2,7 @@ const $ = require('jquery');
 //Model
 function init() {
     return {
+        Time: 1,
         Power: 100,
         lookingAt: 'classroom Camera',
         monsterLocation: 'hallway',

@@ -88,11 +88,7 @@ function Doors(Model) {
     }
 }
 function screenView(picture) {
-    return (
-        "<img class='center-block' src='" +
-        picture +
-        "' width='730px' height='364px' align='middle'/>"
-    );
+    return "<img class='center-block' src='" + picture + "'/>";
 }
 function makeButtons() {
     var allCameras = core.Cameras();
@@ -111,11 +107,20 @@ function ChooseMonsterLocation(location) {
     var index = Math.floor(Math.random() * location.length);
     return location[index];
 }
-
+function currentTime(Model) {
+    Model.Time += 1;
+}
 function main() {
     var button_audio = new Audio('../../assets/Sound_Effects/Button_Click.ogx');
     var static_audio = new Audio('../../assets/Sound_Effects/tv-static-01.mp3');
     var game = core.init();
+    $('#jumbotron-row').html(
+        "<div class='col-lg-6'><h1> Time: " + game.Time + ' a.m. </h1></div>'
+    );
+    $('#jumbotron-row').html(
+        "<div class='col-lg-6'><h1> Power: " + game.Power + '</h1>'
+    );
+    $('#screen').html(screenView(core.SceneChange()['Room']['classroom']));
     $('#buttons').html(makeButtons());
     $('#bathroom').click(function() {
         button_audio.play();
@@ -137,9 +142,14 @@ function main() {
         core.lookingAt(game, 'hallway');
         view(game);
     });
-    $('#screen').html(screenView(core.SceneChange()['Room']['classroom']));
+    // This is the current Time
     setInterval(function() {
-        game.Power -= 1;
+        currentTime(game);
+        $('.jumbotron').html('<h1> Time: ' + game.Time + ' a.m. </h1>');
+    }, 60000);
+    setInterval(function() {
+        //This was made to subtract the power ever second
+        // game.Power -= 1;
         $('.jumbotron').html('<h1> Power: ' + game.Power + '</h1>');
     }, 3000);
     setInterval(function() {
