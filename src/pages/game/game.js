@@ -41,7 +41,6 @@ function view(Model) {
             );
         }
     }
-    gameStart(Model);
 }
 function monsterMove(Model) {
     if (Model.monsterLocation === 'classroom') {
@@ -64,6 +63,28 @@ function monsterMove(Model) {
         core.interact(Model, 'safetyDoor', 'shaking');
         // if after 5 seconds or so the safetyDoor isn't closed then jumpscare
         // else go to either the office or hallway area
+    }
+}
+
+//Take Pictures of the doors tomorrow... Made this function at the house
+function Doors(Model) {
+    if (Model.interactables.safetyDoorOne === 'closed') {
+        //Power - 3
+    } else if (Model.interactables.safetyDoorTwo === 'closed') {
+        //Power - 3
+    } else if (Model.interactables.snackRoomDoor === 'closed') {
+        // Power - 3
+    } else if (
+        Model.interactables.safetyDoorOne === 'closed' &&
+        Model.interactables.safetyDoorTwo === 'closed'
+    ) {
+        // Power - 6
+    } else if (
+        Model.interactables.safetyDoorOne === 'closed' &&
+        Model.interactables.safetyDoorTwo === 'closed' &&
+        Model.interactables.snackRoomDoor === 'closed'
+    ) {
+        // Power - 15
     }
 }
 function screenView(picture) {
@@ -92,26 +113,27 @@ function ChooseMonsterLocation(location) {
 }
 
 function main() {
-    var audio = new Audio('../../assets/Sound_Effects/Button_Click.ogx');
+    var button_audio = new Audio('../../assets/Sound_Effects/Button_Click.ogx');
+    var static_audio = new Audio('../../assets/Sound_Effects/tv-static-01.mp3');
     var game = core.init();
     $('#buttons').html(makeButtons());
     $('#bathroom').click(function() {
-        audio.play();
+        button_audio.play();
         core.lookingAt(game, 'bathroom');
         view(game);
     });
     $('#office').click(function() {
-        audio.play();
+        button_audio.play();
         core.lookingAt(game, 'office');
         view(game);
     });
     $('#classroom').click(function() {
-        audio.play();
+        button_audio.play();
         core.lookingAt(game, 'classroom');
         view(game);
     });
     $('#hallway').click(function() {
-        audio.play();
+        button_audio.play();
         core.lookingAt(game, 'hallway');
         view(game);
     });
@@ -122,11 +144,12 @@ function main() {
     }, 3000);
     setInterval(function() {
         monsterMove(game);
+        static_audio.play();
         $('#screen').html(screenView('../../assets/Tv_Effects/Static_Tv.gif'));
         setTimeout(function() {
             view(game);
         }, 1000);
-        console.log(game.monsterLocation);
+        // console.log(game.monsterLocation);
     }, 5000);
     view(game);
 }
