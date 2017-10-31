@@ -60,31 +60,48 @@ function monsterMove(Model) {
         var locations = ChooseMonsterLocation(['hallway']);
         core.monsterMove(Model, locations);
     } else if (Model.monsterLocation === 'safetyDoor') {
-        core.interact(Model, 'safetyDoor', 'shaking');
+        if (Model.monsterLocation) {
+        }
         // if after 5 seconds or so the safetyDoor isn't closed then jumpscare
         // else go to either the office or hallway area
     }
 }
-
+//Game Over function takes in the Model and returns the state after everything is finished
+function gameOver(Model) {
+    if (Model.Time === 6) {
+        $('#app').html('<h1> You Win </h1>');
+    } else {
+        if (Model.Power <= 0 && Model.Time < 6) {
+            // You lose
+        } else if (monsterWinConditions(Model) === true) {
+            //You lose
+        }
+    }
+}
+function monsterWinConditions(Model) {
+    if (
+        Model.monsterLocation === 'safteyDoorOne' &&
+        Model.interactables.safetyDoorOne === 'open'
+    ) {
+        return true;
+    } else if (
+        Model.monsterLocation === 'safteyDoorTwo' &&
+        Model.interactables.safetyDoorTwo === 'open'
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
 //Take Pictures of the doors tomorrow... Made this function at the house
+// SnackRoomDoor Closed = 6
+// Safety Doors Closed = 3
 function Doors(Model) {
-    if (Model.interactables.safetyDoorOne === 'closed') {
-        //Power - 3
-    } else if (Model.interactables.safetyDoorTwo === 'closed') {
-        //Power - 3
-    } else if (Model.interactables.snackRoomDoor === 'closed') {
-        // Power - 3
-    } else if (
-        Model.interactables.safetyDoorOne === 'closed' &&
-        Model.interactables.safetyDoorTwo === 'closed'
-    ) {
-        // Power - 6
-    } else if (
-        Model.interactables.safetyDoorOne === 'closed' &&
-        Model.interactables.safetyDoorTwo === 'closed' &&
-        Model.interactables.snackRoomDoor === 'closed'
-    ) {
-        // Power - 15
+    var safetyDoorOne = Model.interactables.safetyDoorOne;
+    var safetyDoorTwo = Model.interactables.safetyDoorTwo;
+    if (safetyDoorOne === 'open' && safetyDoorTwo === 'open') {
+        Model.Power -= 1;
+    } else if (safetyDoorOne === 'open' && safetyDoorTwo === 'closed') {
     }
 }
 function screenView(picture) {
@@ -114,43 +131,48 @@ function main() {
     var button_audio = new Audio('../../assets/Sound_Effects/Button_Click.ogx');
     var static_audio = new Audio('../../assets/Sound_Effects/tv-static-01.mp3');
     var game = core.init();
-    $('#jumbotron-row').html(
-        "<div class='col-lg-6'><h1> Time: " + game.Time + ' a.m. </h1></div>'
+    $('#jumbotron-time').html(
+        "<div class='col-lg-6'><h2> Time: " + game.Time + ' a.m. </h2></div>'
     );
-    $('#jumbotron-row').html(
-        "<div class='col-lg-6'><h1> Power: " + game.Power + '</h1>'
+    $('#jumbotron-power').html(
+        "<div class='col-lg-6'><h2> Power: " + game.Power + '</h2>'
     );
     $('#screen').html(screenView(core.SceneChange()['Room']['classroom']));
     $('#buttons').html(makeButtons());
     $('#bathroom').click(function() {
         button_audio.play();
         core.lookingAt(game, 'bathroom');
+        gameOver(game);
         view(game);
     });
     $('#office').click(function() {
         button_audio.play();
         core.lookingAt(game, 'office');
+        gameOver(game);
         view(game);
     });
     $('#classroom').click(function() {
         button_audio.play();
         core.lookingAt(game, 'classroom');
+        gameOver(game);
         view(game);
     });
     $('#hallway').click(function() {
         button_audio.play();
         core.lookingAt(game, 'hallway');
+        gameOver(game);
         view(game);
     });
     // This is the current Time
     setInterval(function() {
         currentTime(game);
-        $('.jumbotron').html('<h1> Time: ' + game.Time + ' a.m. </h1>');
+        $('#jumbotron-time').html('<h2> Time: ' + game.Time + ' a.m. </h2>');
+        gameOver(game);
     }, 60000);
     setInterval(function() {
         //This was made to subtract the power ever second
         // game.Power -= 1;
-        $('.jumbotron').html('<h1> Power: ' + game.Power + '</h1>');
+        $('#jumbotron-power').html('<h2> Power: ' + game.Power + '</h2>');
     }, 3000);
     setInterval(function() {
         monsterMove(game);
@@ -158,6 +180,7 @@ function main() {
         $('#screen').html(screenView('../../assets/Tv_Effects/Static_Tv.gif'));
         setTimeout(function() {
             view(game);
+            gameOver(game);
         }, 1000);
         // console.log(game.monsterLocation);
     }, 5000);

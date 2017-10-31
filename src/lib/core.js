@@ -7,7 +7,6 @@ function init() {
         lookingAt: 'classroom Camera',
         monsterLocation: 'hallway',
         interactables: {
-            snackRoomDoor: 'closed', // 'off' // 'powering down',
             safetyDoorTwo: 'closed', // 'open' // 'shaking',
             safetyDoorOne: 'closed' // 'open' // 'shaking'
         }
