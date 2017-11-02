@@ -23,6 +23,9 @@ function Cameras() {
         'safetyDoorTwo'
     ];
 }
+function Doors() {
+    return ['SD1', 'SD2'];
+}
 function SceneChange() {
     return {
         Room: {
@@ -69,3 +72,4 @@ exports.monsterMove = monsterMove;
 exports.interact = interact;
 exports.Cameras = Cameras;
 exports.SceneChange = SceneChange;
+exports.Doors = Doors;
