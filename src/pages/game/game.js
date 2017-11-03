@@ -144,11 +144,19 @@ function monsterMove(Model) {
 //Game Over function takes in the Model and returns the state after everything is finished
 function gameOver(Model) {
     if (Model.Time === 6) {
-        $('#app').html('<h1> You Win </h1>');
+        if (!Model.restarted) {
+            level(
+                core.init(Model.monsterMoveTime / 2),
+                Model.monsterMoveTime / 2
+            );
+            Model.restarted = true;
+        }
     } else if (monsterWinConditions(Model) === true) {
         $('#app').html('<h1> You Lose </h1>');
+        Model.GameOver === true;
     } else if (Model.Power <= 0 && Model.Time < 6) {
         $('#app').html('<h1> You Lose </h1>');
+        Model.GameOver === true;
     }
 }
 function monsterWinConditions(Model) {
@@ -161,13 +169,13 @@ function Doors(Model) {
     var safetyDoorOne = Model.interactables.safetyDoorOne;
     var safetyDoorTwo = Model.interactables.safetyDoorTwo;
     if (safetyDoorOne === 'open' && safetyDoorTwo === 'open') {
-        Model.Power -= 0.205;
+        Model.Power -= 0.105;
     } else if (safetyDoorOne === 'open' && safetyDoorTwo === 'closed') {
-        Model.Power -= 0.205 * 2;
+        Model.Power -= 0.105 * 2;
     } else if (safetyDoorOne === 'closed' && safetyDoorTwo === 'open') {
-        Model.Power -= 0.205 * 2;
+        Model.Power -= 0.105 * 2;
     } else {
-        Model.Power -= 0.205 * 4;
+        Model.Power -= 0.105 * 4;
     }
 }
 function screenView(picture) {
@@ -251,7 +259,7 @@ function openOrClose(door) {
         return 'closed';
     }
 }
-function level(game) {
+function level(game, MonsterMovementTime) {
     $('#jumbotron-time').html(
         "<div class='col-lg-6'><h2> Time: " + game.Time + ' a.m. </h2></div>'
     );
@@ -269,7 +277,6 @@ function level(game) {
             openOrClose(game.interactables.safetyDoorOne)
         );
         view(game);
-        gameOver(game);
     });
     $('#SD2').click(function() {
         core.interact(
@@ -278,43 +285,36 @@ function level(game) {
             openOrClose(game.interactables.safetyDoorTwo)
         );
         view(game);
-        gameOver(game);
     });
     $('#bathroom').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'bathroom');
-        gameOver(game);
         view(game);
     });
     $('#office').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'office');
-        gameOver(game);
         view(game);
     });
     $('#classroom').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'classroom');
-        gameOver(game);
         view(game);
     });
     $('#hallway').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'hallway');
-        gameOver(game);
         view(game);
     });
     $('#safetyDoorOne').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'safetyDoorOne');
-        gameOver(game);
         view(game);
         // Warning(game);
     });
     $('#safetyDoorTwo').click(function() {
         SoundEffects()['CameraClick'].play();
         core.lookingAt(game, 'safetyDoorTwo');
-        gameOver(game);
         view(game);
         // Warning(game);
     });
@@ -324,6 +324,7 @@ function level(game) {
         $('#jumbotron-time').html('<h2> Time: ' + game.Time + ' a.m. </h2>');
         gameOver(game);
         if (KillIntervals(game) === true) {
+            console.log('gt killed');
             clearInterval(gameTime);
         }
     }, 60000);
@@ -334,6 +335,7 @@ function level(game) {
             '<h2> Power: ' + Math.ceil(game.Power) + '</h2>'
         );
         if (KillIntervals(game) === true) {
+            console.log('gp killed');
             clearInterval(gamePower);
         }
     }, 1000);
@@ -348,9 +350,11 @@ function level(game) {
         Warning(game);
         console.log(game.monsterLocation);
         if (KillIntervals(game) === true) {
+            console.log('move killed');
+
             clearInterval(MonsterMoveInterval);
         }
-    }, 5000);
+    }, MonsterMovementTime);
     view(game);
 }
 function ChooseMonsterLocation(location) {
@@ -388,7 +392,7 @@ function main() {
         '../../assets/fnabc/safetyroompics/Closed_SD2.jpeg',
         '../../assets/fnabc/safetyroompics/Monster_at_SD2.jpeg'
     );
-    var game = core.init();
-    level(game);
+    var game = core.init(10000);
+    level(game, game.monsterMoveTime); //level 1
 }
 $(main);

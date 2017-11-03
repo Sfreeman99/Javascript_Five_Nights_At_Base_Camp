@@ -1,7 +1,10 @@
 const $ = require('jquery');
 //Model
-function init() {
+function init(mmt) {
     return {
+        monsterMoveTime: mmt,
+        restarted: false,
+        GameOver: false,
         Time: 1,
         Power: 100,
         lookingAt: null, // null is used to show the outside view
@@ -29,29 +32,32 @@ function Doors() {
 function SceneChange() {
     return {
         Room: {
-            hallway: '../../assets/fnabc/Hallway.jpeg',
-            bathroom: '../../assets/fnabc/Bathroom.jpeg',
-            office: '../../assets/fnabc/Office.jpeg',
+            hallway: '../../assets/fnabc/Hallway.jpg',
+            bathroom: '../../assets/fnabc/bathroom.jpg',
+            office: '../../assets/fnabc/office.jpg',
             classroom: '' // havent taken
         },
         MonsterInRoom: {
-            hallway: '../../assets/fnabc/Hallway_with_monster.jpeg',
-            bathroom: '../../assets/fnabc/Bathroom_with_Monster.jpeg',
-            office:
-                '../../assets/fnabc/D6846834-B60A-4E1C-99C6-1721759BF537.jpeg',
-            classroom: '' //hasnt been taken
+            hallway: [
+                '../../assets/fnabc/Hallway_with_monster_ in_door.jpg',
+                '../../assets/fnabc/Hallway_with_monster_on_stairs.jpg'
+            ],
+            bathroom: '../../assets/fnabc/Bathroom_with_monster.jpg',
+            office: '../../assets/fnabc/Office_with_monster.jpg',
+            classroom: [
+                '../../assets/fnabc/Classroom_with_monster.jpg',
+                '../../assets/fnabc/Classroom_with_monster_behind_student.jpg'
+            ] //hasnt been taken
         },
         safetyDoorOne: {
-            open: '../../assets/fnabc/Home.jpeg',
-            closed: '../../assets/fnabc/safetyroompics/Closed_SD1.jpeg',
-            monsterInDoor:
-                '../../assets/fnabc/safetyroompics/Monster_at_SD1.jpeg'
+            open: '../../assets/fnabc/SD1_open.jpg',
+            closed: '../../assets/fnabc/SD1_closed.jpg',
+            monsterInDoor: '../../assets/fnabc/SD1_with_monster.jpg'
         },
         safetyDoorTwo: {
-            open: '../../assets/fnabc/safetyroompics/Open_SD2.jpeg',
-            closed: '../../assets/fnabc/safetyroompics/Closed_SD2.jpeg',
-            monsterInDoor:
-                '../../assets/fnabc/safetyroompics/Monster_at_SD2.jpeg'
+            open: '../../assets/fnabc/SD2_open.jpg',
+            closed: '../../assets/fnabc/SD2_closed.jpg',
+            monsterInDoor: '../../assets/fnabc/SD2_with_monster.jpg'
         }
     };
 }
