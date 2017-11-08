@@ -5,7 +5,11 @@ function view(Model) {
     if (Model.lookingAt === 'classroom') {
         if (Model.monsterLocation === 'classroom') {
             $('#screen').html(
-                screenView(core.SceneChange()['MonsterInRoom']['classroom'])
+                screenView(
+                    ChooseMonsterLocation(
+                        core.SceneChange()['MonsterInRoom']['classroom']
+                    )
+                )
             );
         } else {
             $('#screen').html(
@@ -23,7 +27,11 @@ function view(Model) {
     } else if (Model.lookingAt === 'hallway') {
         if (Model.monsterLocation === 'hallway') {
             $('#screen').html(
-                screenView(core.SceneChange()['MonsterInRoom']['hallway'])
+                screenView(
+                    ChooseMonsterLocation(
+                        core.SceneChange()['MonsterInRoom']['hallway']
+                    )
+                )
             );
         } else {
             $('#screen').html(
@@ -211,7 +219,8 @@ function SoundEffects() {
         WarningEffect: new Audio(
             '../../assets/Sound_Effects/Warning_Sound.ogx'
         ),
-        DoorPounding: new Audio('../../assets/Sound_Effects/Door_Pounding.ogx')
+        DoorPounding: new Audio('../../assets/Sound_Effects/Door_Pounding.ogx'),
+        DoorClose: new Audio('../../assets/Sound_Effects/Door_closed.ogx')
     };
 }
 function makeDoors() {
@@ -271,6 +280,7 @@ function level(game, MonsterMovementTime) {
     $('#buttons').html(makeButtons());
     $('#doors').html(makeDoors());
     $('#SD1').click(function() {
+        SoundEffects().DoorClose.play();
         core.interact(
             game,
             'safetyDoorOne',
@@ -279,6 +289,7 @@ function level(game, MonsterMovementTime) {
         view(game);
     });
     $('#SD2').click(function() {
+        SoundEffects().DoorClose.play();
         core.interact(
             game,
             'safetyDoorTwo',
@@ -324,7 +335,6 @@ function level(game, MonsterMovementTime) {
         $('#jumbotron-time').html('<h2> Time: ' + game.Time + ' a.m. </h2>');
         gameOver(game);
         if (KillIntervals(game) === true) {
-            console.log('gt killed');
             clearInterval(gameTime);
         }
     }, 60000);
@@ -335,7 +345,6 @@ function level(game, MonsterMovementTime) {
             '<h2> Power: ' + Math.ceil(game.Power) + '</h2>'
         );
         if (KillIntervals(game) === true) {
-            console.log('gp killed');
             clearInterval(gamePower);
         }
     }, 1000);
@@ -348,10 +357,7 @@ function level(game, MonsterMovementTime) {
             view(game);
         }, 1000);
         Warning(game);
-        console.log(game.monsterLocation);
         if (KillIntervals(game) === true) {
-            console.log('move killed');
-
             clearInterval(MonsterMoveInterval);
         }
     }, MonsterMovementTime);
@@ -379,18 +385,21 @@ function main() {
     // var button_audio = new Audio('../../assets/Sound_Effects/Button_Click.ogx');
     // var static_audio = new Audio('../../assets/Sound_Effects/tv-static-01.mp3');
     preload(
-        '../../assets/fnabc/Hallway.jpeg',
-        '../../assets/fnabc/Bathroom.jpeg',
-        '../../assets/fnabc/Office.jpeg',
-        '../../assets/fnabc/Hallway_with_monster.jpeg',
-        '../../assets/fnabc/Bathroom_with_Monster.jpeg',
-        '../../assets/fnabc/D6846834-B60A-4E1C-99C6-1721759BF537.jpeg',
-        '../../assets/fnabc/Home.jpeg',
-        '../../assets/fnabc/safetyroompics/Closed_SD1.jpeg',
-        '../../assets/fnabc/safetyroompics/Monster_at_SD1.jpeg',
-        '../../assets/fnabc/safetyroompics/Open_SD2.jpeg',
-        '../../assets/fnabc/safetyroompics/Closed_SD2.jpeg',
-        '../../assets/fnabc/safetyroompics/Monster_at_SD2.jpeg'
+        '../../assets/fnabc/Hallway.jpg',
+        '../../assets/fnabc/bathroom.jpg',
+        '../../assets/fnabc/office.jpg',
+        '../../assets/fnabc/Hallway_with_monster_ in_door.jpg',
+        '../../assets/fnabc/Hallway_with_monster_on_stairs.jpg',
+        '../../assets/fnabc/Bathroom_with_monster.jpg',
+        '../../assets/fnabc/Office_with_monster.jpg',
+        '../../assets/fnabc/Classroom_with_monster.jpg',
+        '../../assets/fnabc/Classroom_with_monster_behind_student.jpg',
+        '../../assets/fnabc/SD1_open.jpg',
+        '../../assets/fnabc/SD1_closed.jpg',
+        '../../assets/fnabc/SD1_with_monster.jpg',
+        '../../assets/fnabc/SD2_open.jpg',
+        '../../assets/fnabc/SD2_closed.jpg',
+        '../../assets/fnabc/SD2_with_monster.jpg'
     );
     var game = core.init(10000);
     level(game, game.monsterMoveTime); //level 1

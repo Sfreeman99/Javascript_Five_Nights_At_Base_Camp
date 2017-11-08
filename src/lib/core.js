@@ -47,7 +47,7 @@ function SceneChange() {
             classroom: [
                 '../../assets/fnabc/Classroom_with_monster.jpg',
                 '../../assets/fnabc/Classroom_with_monster_behind_student.jpg'
-            ] //hasnt been taken
+            ]
         },
         safetyDoorOne: {
             open: '../../assets/fnabc/SD1_open.jpg',
