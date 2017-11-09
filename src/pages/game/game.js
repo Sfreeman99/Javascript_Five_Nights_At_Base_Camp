@@ -1,5 +1,6 @@
 const $ = require('jquery');
 const core = require('../../lib/core');
+var rounds = 1;
 
 function view(Model) {
     if (Model.lookingAt === 'classroom') {
@@ -153,11 +154,16 @@ function monsterMove(Model) {
 function gameOver(Model) {
     if (Model.Time === 6) {
         if (!Model.restarted) {
-            level(
-                core.init(Model.monsterMoveTime / 2),
-                Model.monsterMoveTime / 2
-            );
-            Model.restarted = true;
+            if (rounds === 5) {
+                $('#app').html('<h1> You Win </h1>');
+            } else {
+                rounds += 1;
+                level(
+                    core.init(Model.monsterMoveTime / 2),
+                    Model.monsterMoveTime / 2
+                );
+                Model.restarted = true;
+            }
         }
     } else if (monsterWinConditions(Model) === true) {
         $('#app').html('<h1> You Lose </h1>');
