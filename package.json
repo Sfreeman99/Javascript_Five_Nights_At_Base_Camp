@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "copy-webpack-plugin": "^4.1.1",
-        "jest": "^21.2.1",
+        "jest": "^22.4.2",
         "webpack": "^3.6.0"
     },
     "scripts": {
